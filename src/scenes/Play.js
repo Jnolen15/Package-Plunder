@@ -8,7 +8,7 @@ class Play extends Phaser.Scene {
     preload(){
         this.load.image('sky', './assets/Sky.png');
         this.load.image('clouds', './assets/clouds.png');
-        this.load.image('rocket', './assets/rocket.png');
+        this.load.image('rock', './assets/rock.png');
         this.load.image('slingshot', './assets/slingshot.png');
         this.load.image('drone', './assets/drone.png');
         //load spritesheet
@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
 
         // Add rocket
-        this.p1Rocket = new Rocket(this, game.config.width / 2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5,0);;
+        this.p1Rocket = new Rocket(this, game.config.width / 2, game.config.height - borderUISize - borderPadding, 'rock').setOrigin(0.5,0);
         
         // Add Drones (x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'drone', 0, 30).setOrigin(0, 0);
