@@ -9,6 +9,8 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.image('sky', './assets/Sky.png');
+        this.load.image('clouds', './assets/clouds.png');
     }
 
     create() {
@@ -16,7 +18,7 @@ class Menu extends Phaser.Scene {
         let menuConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
+            backgroundColor: '#5b6ee1',
             color: '#843605',
             align: 'right',
             padding: {
@@ -26,15 +28,23 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
 
+        // sky bacground
+        this.sky = this.add.tileSprite(0,0,640,480, 'sky').setOrigin(0,0);
+        this.clouds = this.add.tileSprite(0,0,640,480, 'clouds').setOrigin(0,0);
+
         //show menu text
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', 
+        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding - 88, 'PACKAGE PLUNDER', 
+            menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding - 44, 
+            'Use you trusty slingshot to shoot down', 
+            menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 
+            'delivery drones and make a quick buck', 
             menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2, 'Use <--> arrows to move & (F) to fire', 
             menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#00FF00';
-        menuConfig.color = '#000';
         this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 
-            'Press <- for novice or -> for Expert', menuConfig).setOrigin(0.5);
+            'Press <- for Normal or -> for Hard', menuConfig).setOrigin(0.5);
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
