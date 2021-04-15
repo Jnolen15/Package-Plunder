@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
         this.load.image('sky', './assets/Sky.png');
         this.load.image('clouds', './assets/clouds.png');
         this.load.image('rock', './assets/rock.png');
+        this.load.image('brick', './assets/brick.png');
         this.load.image('slingshot', './assets/slingshot.png');
         this.load.image('drone', './assets/drone.png');
         //load spritesheet
@@ -25,6 +26,9 @@ class Play extends Phaser.Scene {
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
         this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
+
+        // Add slingshot
+        this.slingshot = this.add.sprite(66,50, 'slingshot').setOrigin(0,0);
 
         // Add rocket
         this.p1Rocket = new Rocket(this, game.config.width / 2, game.config.height - borderUISize - borderPadding, 'rock').setOrigin(0.5,0);
@@ -63,7 +67,7 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2,this.p1Score + "$", scoreConfig);
 
         // GAME OVER flag
         this.gameOver = false;
@@ -86,7 +90,19 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
         
+        // check if points are high enough for brick mode.
+        if(this.p1Score > 190){
+            this.p1Rocket.setTexture('brick');
+            this.p1Rocket.brickMode = true;
+        }
+
+
         this.clouds.tilePositionX -= 1;
+
+        // Move the slingshot with the 'rocket' except when its firing
+        if(!this.p1Rocket.isFiring){
+            this.slingshot.setPosition(this.p1Rocket.x - 40, this.p1Rocket.y - 40);
+        }
 
         if(!this.gameOver){
             this.p1Rocket.update();
@@ -98,19 +114,31 @@ class Play extends Phaser.Scene {
 
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)){
-            this.p1Rocket.reset();
             this.shipExplode(this.ship03);
             console.log("Bottem of check");
+            if(!this.p1Rocket.brickMode == true){
+                this.p1Rocket.reset();
+            } else {
+                this.ship03.hitWithBrick = true;
+            }
         }
         if(this.checkCollision(this.p1Rocket, this.ship02)){
-            this.p1Rocket.reset();
             this.shipExplode(this.ship02);
             console.log("Bottem of check");
+            if(!this.p1Rocket.brickMode == true){
+                this.p1Rocket.reset();
+            } else {
+                this.ship02.hitWithBrick = true;
+            }
         }
         if(this.checkCollision(this.p1Rocket, this.ship01)){
-            this.p1Rocket.reset();
             this.shipExplode(this.ship01);
             console.log("Bottem of check");
+            if(!this.p1Rocket.brickMode == true){
+                this.p1Rocket.reset();
+            } else {
+                this.ship01.hitWithBrick = true;
+            }
         }
     }
 
@@ -119,7 +147,8 @@ class Play extends Phaser.Scene {
         if(rocket.x < ship.x + ship.width &&
             rocket.x + rocket.width > ship.x &&
             rocket.y < ship.y + ship.height &&
-            rocket.height + rocket.y > ship.y) {
+            rocket.height + rocket.y > ship.y &&
+            ship.hitWithBrick == false) {
                 return true;
         } else {
             return false;
@@ -136,10 +165,11 @@ class Play extends Phaser.Scene {
             ship.reset();
             ship.alpha = 1;
             boom.destroy();
+            ship.hitWithBrick = false;
         });
         // score add and repaint
         this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score;
+        this.scoreLeft.text = this.p1Score + "$";
         // sound FX
         this.sound.play('sfx_explosion');
     }
