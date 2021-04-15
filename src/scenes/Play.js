@@ -12,6 +12,7 @@ class Play extends Phaser.Scene {
         this.load.image('brick', './assets/brick.png');
         this.load.image('slingshot', './assets/slingshot.png');
         this.load.image('drone', './assets/drone.png');
+        this.load.image('money', './assets/money.png');
         //load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         }
@@ -79,6 +80,21 @@ class Play extends Phaser.Scene {
             this.add.text(game.config.width / 2, game.config.height / 2 + 64, 'Press (R) to Restart or <- for menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+
+        // Particles
+        let particleConfig = {
+            x: 400,
+            y: 300,
+            blendmode: 'ADD',
+            speed: {min: 20, max: 200},
+            scale: {start: 1, end: 0},
+            rotate: {start: 360, end: 0},
+            gravityY: 200,
+            on: false,
+        }
+
+        this.particles = this.add.particles('money');
+        this.emitter = this.particles.createEmitter(particleConfig);
     }
 
     update(){
@@ -115,7 +131,6 @@ class Play extends Phaser.Scene {
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)){
             this.shipExplode(this.ship03);
-            console.log("Bottem of check");
             if(!this.p1Rocket.brickMode == true){
                 this.p1Rocket.reset();
             } else {
@@ -124,7 +139,6 @@ class Play extends Phaser.Scene {
         }
         if(this.checkCollision(this.p1Rocket, this.ship02)){
             this.shipExplode(this.ship02);
-            console.log("Bottem of check");
             if(!this.p1Rocket.brickMode == true){
                 this.p1Rocket.reset();
             } else {
@@ -133,7 +147,6 @@ class Play extends Phaser.Scene {
         }
         if(this.checkCollision(this.p1Rocket, this.ship01)){
             this.shipExplode(this.ship01);
-            console.log("Bottem of check");
             if(!this.p1Rocket.brickMode == true){
                 this.p1Rocket.reset();
             } else {
@@ -160,6 +173,7 @@ class Play extends Phaser.Scene {
         ship.alpha = 0;
         // create explosion sprite at ships location
         let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
+        this.particles.emitParticleAt(ship.x + 40, ship.y + 20, ship.points)
         boom.anims.play('explode');
         boom.on('animationcomplete', () => {
             ship.reset();
