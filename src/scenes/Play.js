@@ -8,6 +8,7 @@ class Play extends Phaser.Scene {
     preload(){
         this.load.image('sky', './assets/Sky.png');
         this.load.image('clouds', './assets/clouds.png');
+        this.load.image('sun', './assets/sun.png');
         this.load.image('rock', './assets/rock.png');
         this.load.image('brick', './assets/brick.png');
         this.load.image('slingshot', './assets/slingshot.png');
@@ -20,6 +21,7 @@ class Play extends Phaser.Scene {
     create() {
         // sky bacground
         this.sky = this.add.tileSprite(0,0,640,480, 'sky').setOrigin(0,0);
+        this.sun = this.add.tileSprite(0,0,640,480, 'sun').setOrigin(0,0);
         this.clouds = this.add.tileSprite(0,0,640,480, 'clouds').setOrigin(0,0);
         
         // White borders
@@ -114,6 +116,7 @@ class Play extends Phaser.Scene {
 
 
         this.clouds.tilePositionX -= 1;
+        this.sun.tilePositionX -= 0.1;
 
         // Move the slingshot with the 'rocket' except when its firing
         if(!this.p1Rocket.isFiring){

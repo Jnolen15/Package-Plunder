@@ -10,6 +10,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
         this.load.image('sky', './assets/Sky.png');
+        this.load.image('sun', './assets/sun.png');
         this.load.image('clouds', './assets/clouds.png');
     }
 
@@ -30,6 +31,7 @@ class Menu extends Phaser.Scene {
 
         // sky bacground
         this.sky = this.add.tileSprite(0,0,640,480, 'sky').setOrigin(0,0);
+        this.sun = this.add.tileSprite(0,0,640,480, 'sun').setOrigin(0,0);
         this.clouds = this.add.tileSprite(0,0,640,480, 'clouds').setOrigin(0,0);
 
         //show menu text
